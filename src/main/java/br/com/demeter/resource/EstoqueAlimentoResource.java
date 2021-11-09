@@ -28,14 +28,14 @@ public class EstoqueAlimentoResource {
         }
         
     	@PUT
-    	@Path("/{idUsuarioLogado}/{idAlimento}")
+    	@Path("/editar/{idUsuarioLogado}/{idAlimento}")
     	@Consumes(MediaType.APPLICATION_JSON)
     	public Response atualiza(EstoqueAlimentoTO estoque, @PathParam("idUsuarioLogado") int idUsuarioLogado,
 								 @PathParam("idAlimento") int idAlimento) {
     		estoque.setIdAlimento(idAlimento);
-    		estoqueAlimentoBO.editar(estoque);
+    		estoqueAlimentoBO.editar(estoque, idUsuarioLogado);
     		return Response.ok().build();
     	}
 
 
-}
+}	

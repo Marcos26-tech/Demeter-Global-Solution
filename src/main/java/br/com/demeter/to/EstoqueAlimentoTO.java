@@ -11,7 +11,7 @@ public class EstoqueAlimentoTO {
     private int idAlimento;
     private String nomeAlimento;
     private Date dataValidadeAlimento;
-
+    private int idEstoque;
 
     public EstoqueAlimentoTO() {
     }
@@ -21,6 +21,14 @@ public class EstoqueAlimentoTO {
         this.idAlimento = idAlimento;
         this.nomeAlimento = nomeAlimento;
         this.dataValidadeAlimento = dataValidadeAlimento;
+    }
+
+    public EstoqueAlimentoTO(int quantidadeAlimento, int idAlimento, String nomeAlimento, Date dataValidadeAlimento, int idEstoque) {
+        this.quantidadeAlimento = quantidadeAlimento;
+        this.idAlimento = idAlimento;
+        this.nomeAlimento = nomeAlimento;
+        this.dataValidadeAlimento = dataValidadeAlimento;
+        this.idEstoque = idEstoque;
     }
 
     public int getQuantidadeAlimento() {
@@ -53,6 +61,14 @@ public class EstoqueAlimentoTO {
 
     public void setDataValidadeAlimento(Date dataValidadeAlimento) {
         this.dataValidadeAlimento = dataValidadeAlimento;
+    }
+
+    public int getIdEstoque() {
+        return idEstoque;
+    }
+
+    public void setIdEstoque(int idEstoque) {
+        this.idEstoque = idEstoque;
     }
 
     @Override
