@@ -1,14 +1,14 @@
 package br.com.demeter.to;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
 public class UsuarioTO {
 
 	private int idUsuario;
 	private long cnpjUsuario;
 	private String razaoSocial;
 	private String emailUusario;
-//	@JsonIgnore
 	private String senhaUsuario;
 	private String tipoUsuario;
 	private String regiaoUsuario;

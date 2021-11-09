@@ -2,6 +2,9 @@ package br.com.demeter.to;
 
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class EstoqueAlimentoTO {
 
     private int quantidadeAlimento;

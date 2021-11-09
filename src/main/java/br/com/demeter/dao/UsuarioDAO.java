@@ -60,8 +60,6 @@ public class UsuarioDAO {
 
         String sql = "INSERT INTO T_DEM_USUARIO (id_usuario, nr_cnpj, nm_razao_social, ds_email, ds_senha, tp_usuario)"
         		+ " VALUES (sq_dem_usuario.nextval, ?, ?, ?, ?, ?)";
-       
-//        String sql2 = "INSERT INTO t_dem_usuario_endereco (id_usuario, id_endereco, nm_regiao) values (sq_dem_usuario.currval, sq_dem_usuario_endereco.nextval, ?)";
 
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setLong(1, usuarioTO.getCnpjUsuario());

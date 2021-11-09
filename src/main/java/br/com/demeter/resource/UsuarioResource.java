@@ -3,8 +3,6 @@ package br.com.demeter.resource;
 import br.com.demeter.bo.UsuarioBO;
 import br.com.demeter.to.UsuarioTO;
 
-import java.sql.SQLException;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
