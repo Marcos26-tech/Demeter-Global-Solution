@@ -13,8 +13,13 @@ public class UsuarioDAO {
 
     public UsuarioTO login(String email, String senha) {
 
-        String sql = "SELECT id_usuario, nr_cnpj, nm_razao_social, ds_email, ds_senha, tp_usuario"
-                + " FROM T_DEM_USUARIO WHERE ds_email like ? and ds_senha like ?";
+        String sql = "SELECT U.id_usuario, U.nr_cnpj, U.nm_razao_social, U.ds_email, U.tp_usuario, E.NM_REGIAO "
+                + "FROM T_DEM_USUARIO U INNER JOIN T_DEM_USUARIO_ENDERECO E "
+                + "ON (U.ID_USUARIO = E.ID_USUARIO) "
+                + "WHERE ds_email like ? and ds_senha like ?";
+        
+        
+        
         PreparedStatement prepareStatement = null;
         try {
             prepareStatement = con.prepareStatement(sql);
@@ -30,6 +35,7 @@ public class UsuarioDAO {
             usuarioTO.setRazaoSocial(resultSet.getString("nm_razao_social"));
             usuarioTO.setEmailUusario(resultSet.getString("ds_email"));
             usuarioTO.setTipoUsuario(resultSet.getString("tp_usuario"));
+            usuarioTO.setRegiaoUsuario(resultSet.getString("nm_regiao"));
 
             con.close();
 

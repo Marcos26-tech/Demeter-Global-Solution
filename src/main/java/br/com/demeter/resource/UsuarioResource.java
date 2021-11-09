@@ -24,7 +24,7 @@ public class UsuarioResource {
 	@GET
 	@Path("/{email}/{senha}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public UsuarioTO buscar(@PathParam("email") String mail, @PathParam("senha") String senha) {
+	public UsuarioTO login(@PathParam("email") String mail, @PathParam("senha") String senha) {
 		return usuarioBO.login(mail, senha);
 	}
 
