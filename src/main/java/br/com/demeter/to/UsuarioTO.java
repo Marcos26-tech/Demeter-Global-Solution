@@ -1,5 +1,6 @@
 package br.com.demeter.to;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UsuarioTO {
 
@@ -7,6 +8,7 @@ public class UsuarioTO {
 	private long cnpjUsuario;
 	private String razaoSocial;
 	private String emailUusario;
+//	@JsonIgnore
 	private String senhaUsuario;
 	private String tipoUsuario;
 	private String regiaoUsuario;
@@ -86,7 +88,6 @@ public class UsuarioTO {
 				", cnpjUsuario=" + cnpjUsuario +
 				", razaoSocial='" + razaoSocial + '\'' +
 				", emailUusario='" + emailUusario + '\'' +
-				", senhaUsuario='" + senhaUsuario + '\'' +
 				", tipoUsuario='" + tipoUsuario + '\'' +
 				", regiaoUsuario='" + regiaoUsuario + '\'' +
 				'}';
