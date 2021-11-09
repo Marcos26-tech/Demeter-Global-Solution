@@ -12,6 +12,7 @@ public class EstoqueAlimentoTO {
     private String nomeAlimento;
     private Date dataValidadeAlimento;
 
+
     public EstoqueAlimentoTO() {
     }
 
