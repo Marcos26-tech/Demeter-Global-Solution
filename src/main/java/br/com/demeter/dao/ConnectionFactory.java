@@ -9,8 +9,8 @@ public class ConnectionFactory {
 	public static Connection getConnection() {
 		try {
 			String url = "jdbc:oracle:thin:@oracle.fiap.com.br:1521:ORCL";
-			String username = "RM88082";
-			String password = "080502";
+			String username = "RM88251";
+			String password = "300889";
 
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			Connection connection = DriverManager.getConnection(url, username, password);
