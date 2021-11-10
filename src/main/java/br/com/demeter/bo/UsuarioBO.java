@@ -38,11 +38,9 @@ public int cadastrar(UsuarioTO usuarioTO) {
 			cadastrar = usuarioDAO.cadastrarUsuario(usuarioTO);
 			usuarioDAO.cadastrarRegiao(usuarioTO);
 			if (usuarioTO.getTipoUsuario().equals("supermercado")) usuarioDAO.cadastrarEstoque();
-			elif(usuarioTO.getTipoUsuario().equals("entidade")) usuarioDAO.cadastrarReserva();
 		} catch (SQLException e) {
 			System.out.print(e.getMessage());
 		}
-    	
     	return cadastrar;
     }
 

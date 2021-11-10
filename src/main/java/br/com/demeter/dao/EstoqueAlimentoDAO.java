@@ -68,7 +68,7 @@ public class EstoqueAlimentoDAO {
         return null;
     }
 
-    public void editar(EstoqueAlimentoTO receitaById) {
+    public void editarAlimento(EstoqueAlimentoTO receitaById) {
         try {
 
             String sql = "UPDATE T_DEM_ESTOQUE_ALIMENTO EA " +
@@ -87,6 +87,15 @@ public class EstoqueAlimentoDAO {
         }
     }
 
+    public boolean isAlimentoCadastrado(EstoqueAlimentoTO estoqueAlimentoTO) throws SQLException {
+
+        String sql = "SELECT * FROM T_DEM_ALIMENTO WHERE nm_alimento like ?";
+        PreparedStatement prepareStatement = con.prepareStatement(sql);
+        prepareStatement.setString(1, "%" + estoqueAlimentoTO.getNomeAlimento() + "%");
+        ResultSet resultSet = prepareStatement.executeQuery();
+        return resultSet.next();
+    }
+
     public void inserirAlimento(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) throws SQLException{
 
             String sql = "INSERT INTO T_DEM_ALIMENTO (id_alimento, nm_alimento) " +
@@ -95,25 +104,24 @@ public class EstoqueAlimentoDAO {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, estoqueAlimentoTO.getNomeAlimento());
             ps.executeUpdate();
-
-            inserirAlimentoEstoque(estoqueAlimentoTO, idUsuarioLogado);
     }
 
-    private void inserirAlimentoEstoque(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) throws SQLException {
+    public void inserirAlimentoEstoque(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) throws SQLException {
 
             String sql = "INSERT INTO T_DEM_ESTOQUE_ALIMENTO (id_estoque_alimento, id_estoque, id_alimento, qt_alimento, dt_alimento) " +
-                    "VALUES (sq_dem_estoque_alimento.nextval, ?, sq_dem_alimento.currval, ?, ?) ";
+                    "VALUES (sq_dem_estoque_alimento.nextval, ?, ?, ?, ?) ";
 
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, getIdEstoque(estoqueAlimentoTO, idUsuarioLogado));
-            ps.setInt(2, estoqueAlimentoTO.getQuantidadeAlimento());
-            ps.setDate(3, new java.sql.Date(estoqueAlimentoTO.getDataValidadeAlimento().getTime()));
+            ps.setInt(2, getIdAlimento(estoqueAlimentoTO));
+            ps.setInt(3, estoqueAlimentoTO.getQuantidadeAlimento());
+            ps.setDate(4, new java.sql.Date(estoqueAlimentoTO.getDataValidadeAlimento().getTime()));
 
             ps.executeUpdate();
-            con.close();
+//            con.close();
     }
 
-    public int getIdEstoque(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) throws SQLException{
+    private int getIdEstoque(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) throws SQLException{
 
             String sql = "SELECT ID_ESTOQUE " +
                     "FROM T_DEM_ESTOQUE " +
@@ -130,4 +138,29 @@ public class EstoqueAlimentoDAO {
         return estoqueAlimentoTO.getIdEstoque();
     }
 
+    private int getIdAlimento(EstoqueAlimentoTO estoqueAlimentoTO) throws SQLException{
+
+        String sql = "SELECT ID_ALIMENTO " +
+                "FROM T_DEM_ALIMENTO " +
+                "WHERE  NM_ALIMENTO = ?";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, estoqueAlimentoTO.getNomeAlimento());
+        ResultSet rs = ps.executeQuery();
+
+        rs.next();
+        estoqueAlimentoTO.setIdAlimento(rs.getInt("ID_ALIMENTO"));
+
+        return estoqueAlimentoTO.getIdAlimento();
+    }
+
+    public boolean isAlimentoEstoque(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) throws SQLException {
+
+        String sql = "SELECT * FROM T_DEM_ESTOQUE_ALIMENTO WHERE ID_ALIMENTO = ? AND ID_ESTOQUE = ?";
+        PreparedStatement prepareStatement = con.prepareStatement(sql);
+        prepareStatement.setInt(1, getIdAlimento(estoqueAlimentoTO));
+        prepareStatement.setInt(2, getIdEstoque(estoqueAlimentoTO, idUsuarioLogado));
+        ResultSet resultSet = prepareStatement.executeQuery();
+        return resultSet.next();
+    }
 }

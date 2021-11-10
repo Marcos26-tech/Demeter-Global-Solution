@@ -24,8 +24,8 @@ public class EstoqueAlimentoResource {
 	@PUT
 	@Path("/editar/{idUsuarioLogado}/{idAlimento}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response atualiza(EstoqueAlimentoTO estoqueAlimento, @PathParam("idUsuarioLogado") int idUsuarioLogado,
-							 @PathParam("idAlimento") int idAlimento) {
+	public Response atualizaAlimento(EstoqueAlimentoTO estoqueAlimento, @PathParam("idUsuarioLogado") int idUsuarioLogado,
+									 @PathParam("idAlimento") int idAlimento) {
 		estoqueAlimento.setIdAlimento(idAlimento);
 		estoqueAlimentoBO.editar(estoqueAlimento, idUsuarioLogado);
 		return Response.ok().build();
@@ -34,8 +34,8 @@ public class EstoqueAlimentoResource {
 	@POST
 	@Path("/cadastrar/{idUsuarioLogado}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response cadastrar(EstoqueAlimentoTO estoqueAlimentoTO, @PathParam("idUsuarioLogado") int idUsuarioLogado,
-							  @Context UriInfo uriInfo) {
+	public Response cadastrarAlimento(EstoqueAlimentoTO estoqueAlimentoTO, @PathParam("idUsuarioLogado") int idUsuarioLogado,
+									  @Context UriInfo uriInfo) {
 		estoqueAlimentoBO.inserirAlimento(estoqueAlimentoTO, idUsuarioLogado);
 		UriBuilder builder = uriInfo.getAbsolutePathBuilder();
 		builder.path(Integer.toString(estoqueAlimentoTO.getIdAlimento()));

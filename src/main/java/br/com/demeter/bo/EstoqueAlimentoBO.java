@@ -16,7 +16,7 @@ public class EstoqueAlimentoBO {
 
 	public void editar(EstoqueAlimentoTO estoqueAlimento, int idUsuarioLogado) {
 		EstoqueAlimentoTO receitaById = validaAlimento(estoqueAlimento, estoqueAlimentoDAO.listarPorId(estoqueAlimento.getIdAlimento(), idUsuarioLogado));
-        estoqueAlimentoDAO.editar(receitaById);
+        estoqueAlimentoDAO.editarAlimento(receitaById);
 	}
 
     private EstoqueAlimentoTO validaAlimento(EstoqueAlimentoTO request, EstoqueAlimentoTO receitaDoBanco) {
@@ -39,9 +39,15 @@ public class EstoqueAlimentoBO {
 
     public void inserirAlimento(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) {
         try {
-            estoqueAlimentoDAO.inserirAlimento(estoqueAlimentoTO, idUsuarioLogado);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            if (!estoqueAlimentoDAO.isAlimentoCadastrado(estoqueAlimentoTO)){
+                estoqueAlimentoDAO.inserirAlimento(estoqueAlimentoTO, idUsuarioLogado);
+            }
+            if(!estoqueAlimentoDAO.isAlimentoEstoque(estoqueAlimentoTO, idUsuarioLogado)) {
+                estoqueAlimentoDAO.inserirAlimentoEstoque(estoqueAlimentoTO, idUsuarioLogado);
+            }
+            editar(estoqueAlimentoTO, idUsuarioLogado);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

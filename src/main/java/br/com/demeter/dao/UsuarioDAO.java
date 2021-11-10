@@ -68,7 +68,6 @@ public class UsuarioDAO {
        
         return ps.executeUpdate();
 
-//        return cadastrarRegiao(usuarioTO);
     }
     
     public int cadastrarRegiao(UsuarioTO usuarioTO) throws SQLException {
@@ -82,19 +81,16 @@ public class UsuarioDAO {
 
         return ps.executeUpdate();
 
-//        return cadastrarEstoque();
     }
 
-    public int cadastrarEstoque()  throws SQLException {
+    public void cadastrarEstoque()  throws SQLException {
 
         String sql = "INSERT INTO T_DEM_ESTOQUE (id_estoque, id_usuario) " +
                 "VALUES (sq_dem_estoque.nextval, sq_dem_usuario.currval)";
 
         PreparedStatement ps = con.prepareStatement(sql);
 
-        return ps.executeUpdate();
-    }
-
-    public void cadastrarReserva() {
+        ps.executeUpdate();
+        con.close();
     }
 }
