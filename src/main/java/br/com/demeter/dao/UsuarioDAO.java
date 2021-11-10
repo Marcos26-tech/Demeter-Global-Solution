@@ -69,20 +69,33 @@ public class UsuarioDAO {
         ps.setString(5, usuarioTO.getTipoUsuario());
        
         ps.executeUpdate();
-        
-        
+
         return cadastrarRegiao(usuarioTO);
     }
     
     public int cadastrarRegiao(UsuarioTO usuarioTO) throws SQLException {
 
        
-        String sql = "INSERT INTO t_dem_usuario_endereco (id_usuario, id_endereco, nm_regiao) values (sq_dem_usuario.currval, sq_dem_usuario_endereco.nextval, ?)";
+        String sql = "INSERT INTO t_dem_usuario_endereco (id_usuario, id_endereco, nm_regiao)" +
+                " values (sq_dem_usuario.currval, sq_dem_usuario_endereco.nextval, ?)";
 
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setString(1, usuarioTO.getRegiaoUsuario());
 
+        ps.executeUpdate();
+
+        return cadastrarEstoque();
+    }
+
+    private int cadastrarEstoque()  throws SQLException {
+
+        String sql = "INSERT INTO T_DEM_ESTOQUE (id_estoque, id_usuario) " +
+                "VALUES (sq_dem_estoque.nextval, sq_dem_usuario.currval)";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+
         return ps.executeUpdate();
     }
-    
+
+
 }
