@@ -83,4 +83,63 @@ public class EstoqueAlimentoDAO {
             System.out.println(e.getMessage());
         }
     }
+
+    public void inserirAlimento(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) {
+        try {
+            Connection con = ConnectionFactory.getConnection();
+
+            String sql = "INSERT INTO T_DEM_ALIMENTO (id_alimento, nm_alimento) " +
+                    "VALUES (sq_dem_alimento.nextval, ?) ";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, estoqueAlimentoTO.getNomeAlimento());
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            e.getCause();
+        }
+        inserirAlimentoEstoque(estoqueAlimentoTO, getIdEstoque(idUsuarioLogado));
+    }
+
+    private void inserirAlimentoEstoque(EstoqueAlimentoTO estoqueAlimentoTO, int idEstoque) {
+        try {
+            Connection con = ConnectionFactory.getConnection();
+
+            String sql = "INSERT INTO T_DEM_ESTOQUE_ALIMENTO (id_estoque_alimento, id_estoque, id_alimento, qt_alimento, dt_alimento) " +
+                    "VALUES (sq_dem_estoque_alimento.nextval, ?, sq_dem_alimento.currval, ?, ? ";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, idEstoque);
+            ps.setInt(2, estoqueAlimentoTO.getQuantidadeAlimento());
+            ps.setDate(3, new java.sql.Date(estoqueAlimentoTO.getDataValidadeAlimento().getTime()));
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            e.getCause();
+        }
+
+    }
+
+    public int getIdEstoque(int idUsuarioLogado) {
+        try {
+            Connection con = ConnectionFactory.getConnection();
+            String sql = "SELECT ID_ESTOQUE " +
+                    "FROM T_DEM_ESTOQUE " +
+                    "WHERE  ID_USUARIO = ?";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, idUsuarioLogado);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int idEstoque = rs.getInt("ID_ESTOQUE");
+                return idEstoque;
+            }
+            ps.close();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+    }
 }

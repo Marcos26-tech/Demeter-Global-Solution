@@ -13,27 +13,30 @@ public class EstoqueAlimentoBO {
         return estoqueAlimentoDAO.listarTodos(idUsuarioLogado);
     }
 
-	public void editar(EstoqueAlimentoTO estoque, int idUsuarioLogado) {
-		EstoqueAlimentoTO receitaById = validaAlimento(estoque, estoqueAlimentoDAO.listarPorId(estoque.getIdAlimento(), idUsuarioLogado));
+	public void editar(EstoqueAlimentoTO estoqueAlimento, int idUsuarioLogado) {
+		EstoqueAlimentoTO receitaById = validaAlimento(estoqueAlimento, estoqueAlimentoDAO.listarPorId(estoqueAlimento.getIdAlimento(), idUsuarioLogado));
         estoqueAlimentoDAO.editar(receitaById);
 	}
 
     private EstoqueAlimentoTO validaAlimento(EstoqueAlimentoTO request, EstoqueAlimentoTO receitaDoBanco) {
-    	EstoqueAlimentoTO alimento = new EstoqueAlimentoTO();
-        alimento.setIdAlimento(request.getIdAlimento());
-        alimento.setIdEstoque(receitaDoBanco.getIdEstoque());
+    	EstoqueAlimentoTO estoqueAlimentoTO = new EstoqueAlimentoTO();
+        estoqueAlimentoTO.setIdAlimento(request.getIdAlimento());
+        estoqueAlimentoTO.setIdEstoque(receitaDoBanco.getIdEstoque());
         if (request.getQuantidadeAlimento() == 0) {
-            alimento.setQuantidadeAlimento(receitaDoBanco.getQuantidadeAlimento());
+            estoqueAlimentoTO.setQuantidadeAlimento(receitaDoBanco.getQuantidadeAlimento());
         } else {
-            alimento.setQuantidadeAlimento(request.getQuantidadeAlimento());
+            estoqueAlimentoTO.setQuantidadeAlimento(request.getQuantidadeAlimento());
         }
         if (request.getDataValidadeAlimento() == null) {
-            alimento.setDataValidadeAlimento(receitaDoBanco.getDataValidadeAlimento());
+            estoqueAlimentoTO.setDataValidadeAlimento(receitaDoBanco.getDataValidadeAlimento());
         } else {
-            alimento.setDataValidadeAlimento(request.getDataValidadeAlimento());
+            estoqueAlimentoTO.setDataValidadeAlimento(request.getDataValidadeAlimento());
         }
 
-        return alimento;
+        return estoqueAlimentoTO;
     }
 
+    public void inserirAlimento(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) {
+        estoqueAlimentoDAO.inserirAlimento(estoqueAlimentoTO, idUsuarioLogado);
+    }
 }

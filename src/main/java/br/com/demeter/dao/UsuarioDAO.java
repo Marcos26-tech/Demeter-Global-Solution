@@ -56,7 +56,7 @@ public class UsuarioDAO {
         return resultSet.next();
     }
 
-    public int cadastrar(UsuarioTO usuarioTO) throws SQLException {
+    public int cadastrarUsuario(UsuarioTO usuarioTO) throws SQLException {
 
         String sql = "INSERT INTO T_DEM_USUARIO (id_usuario, nr_cnpj, nm_razao_social, ds_email, ds_senha, tp_usuario)"
         		+ " VALUES (sq_dem_usuario.nextval, ?, ?, ?, ?, ?)";

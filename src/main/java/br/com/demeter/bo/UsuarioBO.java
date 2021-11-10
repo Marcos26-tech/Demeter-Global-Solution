@@ -35,7 +35,7 @@ public int cadastrar(UsuarioTO usuarioTO) {
     	
     	int cadastrar = 0;
 		try {
-			cadastrar = usuarioDAO.cadastrar(usuarioTO);
+			cadastrar = usuarioDAO.cadastrarUsuario(usuarioTO);
 		} catch (SQLException e) {
 			System.out.print(e.getMessage());
 		}
