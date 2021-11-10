@@ -9,8 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 
 @Path(value = "/usuario")
 public class UsuarioResource {
@@ -25,22 +24,22 @@ public class UsuarioResource {
 	public UsuarioTO login(@PathParam("email") String mail, @PathParam("senha") String senha) {
 		return usuarioBO.login(mail, senha);
 	}
-	
-	
+
 	@GET
     @Path("/cadastro/{email}")
    	@Consumes(MediaType.APPLICATION_JSON)
     public boolean isCadastrado(@PathParam("email") String email){
     	return usuarioBO.isCadastrado(email);
-	 }
-	
-	 @POST
-	 @Path("/cadastro")
-	 @Consumes(MediaType.APPLICATION_JSON)
-	 public Response cadastrar(UsuarioTO usuarioTO) {
-	 int result = usuarioBO.cadastrar(usuarioTO);
-	 return Response.ok().build();
-	    	
-	    }
-
 	}
+
+	@POST
+	@Path("/cadastro")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response cadastrar(UsuarioTO usuarioTO, @Context UriInfo uriInfo) {
+		usuarioBO.cadastrar(usuarioTO);
+		UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+		builder.path(Integer.toString(usuarioTO.getIdUsuario()));
+		return Response.created(builder.build()).build();
+	}
+
+}

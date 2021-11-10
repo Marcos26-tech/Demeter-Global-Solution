@@ -3,6 +3,7 @@ package br.com.demeter.bo;
 import br.com.demeter.dao.EstoqueAlimentoDAO;
 import br.com.demeter.to.EstoqueAlimentoTO;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class EstoqueAlimentoBO {
@@ -37,6 +38,10 @@ public class EstoqueAlimentoBO {
     }
 
     public void inserirAlimento(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) {
-        estoqueAlimentoDAO.inserirAlimento(estoqueAlimentoTO, idUsuarioLogado);
+        try {
+            estoqueAlimentoDAO.inserirAlimento(estoqueAlimentoTO, idUsuarioLogado);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

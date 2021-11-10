@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EstoqueAlimentoDAO {
+
+    Connection con = ConnectionFactory.getConnection();
+
     public List<EstoqueAlimentoTO> listarTodos(int idUsuario) {
         try {
-            Connection con = ConnectionFactory.getConnection();
+
             String sql = "SELECT A.ID_ALIMENTO, A.nm_alimento, EA.qt_alimento, ea.dt_alimento " +
                     "FROM T_DEM_ALIMENTO A " +
                     "INNER JOIN T_DEM_ESTOQUE_ALIMENTO EA " +
@@ -37,7 +40,7 @@ public class EstoqueAlimentoDAO {
 
     public EstoqueAlimentoTO listarPorId(int idAlimento, int idUsuario) {
         try {
-            Connection con = ConnectionFactory.getConnection();
+
             String sql = "SELECT A.ID_ALIMENTO, A.nm_alimento, EA.qt_alimento, ea.dt_alimento, e.id_estoque " +
                     "FROM T_DEM_ALIMENTO A " +
                     "INNER JOIN T_DEM_ESTOQUE_ALIMENTO EA " +
@@ -67,7 +70,7 @@ public class EstoqueAlimentoDAO {
 
     public void editar(EstoqueAlimentoTO receitaById) {
         try {
-            Connection con = ConnectionFactory.getConnection();
+
             String sql = "UPDATE T_DEM_ESTOQUE_ALIMENTO EA " +
                     "SET EA.qt_alimento = ?, ea.dt_alimento = ? " +
                     "WHERE EA.ID_ALIMENTO = ? AND EA.ID_ESTOQUE = ?";
@@ -84,9 +87,7 @@ public class EstoqueAlimentoDAO {
         }
     }
 
-    public void inserirAlimento(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) {
-        try {
-            Connection con = ConnectionFactory.getConnection();
+    public void inserirAlimento(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) throws SQLException{
 
             String sql = "INSERT INTO T_DEM_ALIMENTO (id_alimento, nm_alimento) " +
                     "VALUES (sq_dem_alimento.nextval, ?) ";
@@ -94,37 +95,26 @@ public class EstoqueAlimentoDAO {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, estoqueAlimentoTO.getNomeAlimento());
             ps.executeUpdate();
-            ps.close();
-        } catch (SQLException e) {
-            e.getCause();
-        }
-        
-        inserirAlimentoEstoque(estoqueAlimentoTO, getIdEstoque(estoqueAlimentoTO, idUsuarioLogado), getIdAlimentoInserido(estoqueAlimentoTO));
+
+            inserirAlimentoEstoque(estoqueAlimentoTO, idUsuarioLogado);
     }
 
-    private void inserirAlimentoEstoque(EstoqueAlimentoTO estoqueAlimentoTO, int idEstoque, int idAlimento) {
-        try {
-            Connection con = ConnectionFactory.getConnection();
+    private void inserirAlimentoEstoque(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) throws SQLException {
 
             String sql = "INSERT INTO T_DEM_ESTOQUE_ALIMENTO (id_estoque_alimento, id_estoque, id_alimento, qt_alimento, dt_alimento) " +
-                    "VALUES (sq_dem_estoque_alimento.nextval, ?, ?, ?, ?) ";
+                    "VALUES (sq_dem_estoque_alimento.nextval, ?, sq_dem_alimento.currval, ?, ?) ";
 
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, idEstoque);
-            ps.setInt(2, idAlimento);
-            ps.setInt(3, estoqueAlimentoTO.getQuantidadeAlimento());
-            ps.setDate(4, new java.sql.Date(estoqueAlimentoTO.getDataValidadeAlimento().getTime()));
-            ps.executeUpdate();
-            ps.close();
-        } catch (SQLException e) {
-            e.getCause();
-        }
+            ps.setInt(1, getIdEstoque(estoqueAlimentoTO, idUsuarioLogado));
+            ps.setInt(2, estoqueAlimentoTO.getQuantidadeAlimento());
+            ps.setDate(3, new java.sql.Date(estoqueAlimentoTO.getDataValidadeAlimento().getTime()));
 
+            ps.executeUpdate();
+            con.close();
     }
 
-    public int getIdEstoque(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) {
-        try {
-            Connection con = ConnectionFactory.getConnection();
+    public int getIdEstoque(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) throws SQLException{
+
             String sql = "SELECT ID_ESTOQUE " +
                     "FROM T_DEM_ESTOQUE " +
                     "WHERE  ID_USUARIO = ?";
@@ -136,34 +126,8 @@ public class EstoqueAlimentoDAO {
             while (rs.next()) {
             	estoqueAlimentoTO.setIdEstoque(rs.getInt("ID_ESTOQUE"));
             }
-            ps.close();
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
         return estoqueAlimentoTO.getIdEstoque();
     }
-    
-    public int getIdAlimentoInserido(EstoqueAlimentoTO estoqueAlimentoTO) {
-    	try {
-            Connection con = ConnectionFactory.getConnection();
-            String sql = "SELECT ID_ALIMENTO " +
-                    "FROM T_DEM_ALIMENTO " +
-                    "WHERE  NM_ALIMENTO = ?";
 
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, estoqueAlimentoTO.getNomeAlimento());
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-            	estoqueAlimentoTO.setIdAlimento(rs.getInt("ID_ALIMENTO"));
-            }
-            ps.close();
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return estoqueAlimentoTO.getIdAlimento();
-    	
-    }
 }

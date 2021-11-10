@@ -17,9 +17,7 @@ public class UsuarioDAO {
                 + "FROM T_DEM_USUARIO U INNER JOIN T_DEM_USUARIO_ENDERECO E "
                 + "ON (U.ID_USUARIO = E.ID_USUARIO) "
                 + "WHERE ds_email like ? and ds_senha like ?";
-        
-        
-        
+
         PreparedStatement prepareStatement = null;
         try {
             prepareStatement = con.prepareStatement(sql);
@@ -68,9 +66,9 @@ public class UsuarioDAO {
         ps.setString(4, usuarioTO.getSenhaUsuario());
         ps.setString(5, usuarioTO.getTipoUsuario());
        
-        ps.executeUpdate();
+        return ps.executeUpdate();
 
-        return cadastrarRegiao(usuarioTO);
+//        return cadastrarRegiao(usuarioTO);
     }
     
     public int cadastrarRegiao(UsuarioTO usuarioTO) throws SQLException {
@@ -82,12 +80,12 @@ public class UsuarioDAO {
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setString(1, usuarioTO.getRegiaoUsuario());
 
-        ps.executeUpdate();
+        return ps.executeUpdate();
 
-        return cadastrarEstoque();
+//        return cadastrarEstoque();
     }
 
-    private int cadastrarEstoque()  throws SQLException {
+    public int cadastrarEstoque()  throws SQLException {
 
         String sql = "INSERT INTO T_DEM_ESTOQUE (id_estoque, id_usuario) " +
                 "VALUES (sq_dem_estoque.nextval, sq_dem_usuario.currval)";
@@ -97,5 +95,6 @@ public class UsuarioDAO {
         return ps.executeUpdate();
     }
 
-
+    public void cadastrarReserva() {
+    }
 }
