@@ -14,30 +14,16 @@ public class UsuarioBO {
     public UsuarioTO login(String mail, String senha){
         return usuarioDAO.login(mail, senha);
     }
-    
-	public boolean isCadastrado(String email) {
-
-		try {
-
-			if (usuarioDAO.isCadastrado(email)) {
-				return true;
-			} else
-				return false;
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-
-	}
 	
 public int cadastrar(UsuarioTO usuarioTO) {
     	
     	int cadastrar = 0;
 		try {
-			cadastrar = usuarioDAO.cadastrarUsuario(usuarioTO);
-			usuarioDAO.cadastrarRegiao(usuarioTO);
-			if (usuarioTO.getTipoUsuario().equals("supermercado")) usuarioDAO.cadastrarEstoque();
+			if (!usuarioDAO.isCadastrado(usuarioTO.getEmailUusario())) {
+				cadastrar = usuarioDAO.cadastrarUsuario(usuarioTO);
+				usuarioDAO.cadastrarRegiao(usuarioTO);
+				if (usuarioTO.getTipoUsuario().equals("supermercado")) usuarioDAO.cadastrarEstoque();
+			}
 		} catch (SQLException e) {
 			System.out.print(e.getMessage());
 		}

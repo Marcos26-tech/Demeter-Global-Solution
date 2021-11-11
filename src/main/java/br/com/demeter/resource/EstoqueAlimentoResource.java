@@ -13,7 +13,6 @@ public class EstoqueAlimentoResource {
 
 	private EstoqueAlimentoBO estoqueAlimentoBO = new EstoqueAlimentoBO();
 
-
 	@GET
 	@Path("/{idUsuarioLogado}")
 	@Produces(MediaType.APPLICATION_JSON)

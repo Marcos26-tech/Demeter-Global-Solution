@@ -25,20 +25,13 @@ public class UsuarioResource {
 		return usuarioBO.login(mail, senha);
 	}
 
-	@GET
-    @Path("/cadastro/{email}")
-   	@Consumes(MediaType.APPLICATION_JSON)
-    public boolean isCadastrado(@PathParam("email") String email){
-    	return usuarioBO.isCadastrado(email);
-	}
-
 	@POST
 	@Path("/cadastro")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response cadastrar(UsuarioTO usuarioTO, @Context UriInfo uriInfo) {
-		usuarioBO.cadastrar(usuarioTO);
+		int resposta = usuarioBO.cadastrar(usuarioTO);
 		UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-		builder.path(Integer.toString(usuarioTO.getIdUsuario()));
+		builder.path(Integer.toString(resposta));
 		return Response.created(builder.build()).build();
 	}
 
