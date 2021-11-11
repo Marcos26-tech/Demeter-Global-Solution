@@ -1,6 +1,7 @@
 package br.com.demeter.resource;
 
 import br.com.demeter.bo.AlimentoReservadoBO;
+import br.com.demeter.to.AlimentoReservadoTO;
 import br.com.demeter.to.EstoqueAlimentoTO;
 import br.com.demeter.to.UsuarioTO;
 
@@ -34,15 +35,15 @@ public class AlimentoReservadoResource {
         return alimentoReservadoBO.mostrarAlimentos(idSupermercado);
     }
 
-//    @POST
-//    @Path("/{idUsuarioLogado}/{idAlimentoReservado}")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public Response cadastrarReservaAlimento(AlimentoReservadoTO alimentoReservadoTO, @PathParam("idUsuarioLogado") int idUsuarioLogado,
-//                                             @PathParam("idAlimentoReservado") int idAlimentoReservado, @Context UriInfo uriInfo) {
-//        alimentoReservadoBO.reservarAlimento(alimentoReservadoTO, idUsuarioLogado, idAlimentoReservado);
-//        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-//        builder.path(Integer.toString(alimentoReservadoTO.getQuantidadeAlimentoReservado()));
-//        return Response.created(builder.build()).build();
-//    }
+    @POST
+    @Path("/reservar/{idUsuarioLogado}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response reservarAlimento(AlimentoReservadoTO alimentoReservadoTO, @PathParam("idUsuarioLogado") int idUsuarioLogado,
+                                     @Context UriInfo uriInfo) {
+        alimentoReservadoBO.reservarAlimento(alimentoReservadoTO, idUsuarioLogado);
+        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+        builder.path(Integer.toString(alimentoReservadoTO.getQuantidadeAlimentoReservado()));
+        return Response.created(builder.build()).build();
+    }
 
 }

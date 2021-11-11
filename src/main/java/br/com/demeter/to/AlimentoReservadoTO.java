@@ -6,23 +6,38 @@ import java.util.Date;
 @XmlRootElement
 public class AlimentoReservadoTO {
 
+    private int idEstoque;
     private int idEstoqueAlimento;
     private int idReserva;
     private int idAlimento;
     private int idUsuarioReserva;
+    private int quantidadeExistenteEstoque;
     private int quantidadeAlimentoReservado;
     private Date dataReservaAlimento;
 
     public AlimentoReservadoTO() {
     }
 
-    public AlimentoReservadoTO(int idEstoqueAlimento, int idReserva, int idAlimento, int idUsuarioReserva, int quantidadeAlimentoReservado, Date dataReservaAlimento) {
+    public AlimentoReservadoTO(int idEstoque, int idEstoqueAlimento, int idReserva, int idAlimento, int idUsuarioReserva, int quantidadeAlimentoReservado, Date dataReservaAlimento) {
+        this.idEstoque = idEstoque;
         this.idEstoqueAlimento = idEstoqueAlimento;
         this.idReserva = idReserva;
         this.idAlimento = idAlimento;
         this.idUsuarioReserva = idUsuarioReserva;
         this.quantidadeAlimentoReservado = quantidadeAlimentoReservado;
         this.dataReservaAlimento = dataReservaAlimento;
+    }
+
+    public AlimentoReservadoTO(int quantidadeExistenteEstoque) {
+        this.quantidadeExistenteEstoque = quantidadeExistenteEstoque;
+    }
+
+    public int getIdEstoque() {
+        return idEstoque;
+    }
+
+    public void setIdEstoque(int idEstoque) {
+        this.idEstoque = idEstoque;
     }
 
     public int getIdEstoqueAlimento() {
@@ -73,10 +88,19 @@ public class AlimentoReservadoTO {
         this.dataReservaAlimento = dataReservaAlimento;
     }
 
+    public int getQuantidadeExistenteEstoque() {
+        return quantidadeExistenteEstoque;
+    }
+
+    public void setQuantidadeExistenteEstoque(int quantidadeExistenteEstoque) {
+        this.quantidadeExistenteEstoque = quantidadeExistenteEstoque;
+    }
+
     @Override
     public String toString() {
         return "AlimentoReservadoTO{" +
-                "idEstoqueAlimento=" + idEstoqueAlimento +
+                "idEstoque=" + idEstoque +
+                ", idEstoqueAlimento=" + idEstoqueAlimento +
                 ", idReserva=" + idReserva +
                 ", idAlimento=" + idAlimento +
                 ", idUsuarioReserva=" + idUsuarioReserva +

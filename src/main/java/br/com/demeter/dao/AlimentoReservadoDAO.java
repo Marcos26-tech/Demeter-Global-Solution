@@ -1,6 +1,7 @@
 package br.com.demeter.dao;
 
 
+import br.com.demeter.to.AlimentoReservadoTO;
 import br.com.demeter.to.EstoqueAlimentoTO;
 import br.com.demeter.to.UsuarioTO;
 
@@ -66,10 +67,10 @@ public class AlimentoReservadoDAO {
     public UsuarioTO mostrarRegioaoUsuarioLogado(int idUsuarioLogado){
         try {
             String sql = " SELECT E.NM_REGIAO " +
-                    "    FROM T_DEM_USUARIO_ENDERECO E " +
-                    "    INNER JOIN T_DEM_USUARIO U " +
-                    "    ON (U.ID_USUARIO = E.ID_USUARIO) " +
-                    "    WHERE U.ID_USUARIO = ?";
+                    "FROM T_DEM_USUARIO_ENDERECO E " +
+                    "INNER JOIN T_DEM_USUARIO U " +
+                    "ON (U.ID_USUARIO = E.ID_USUARIO) " +
+                    "WHERE U.ID_USUARIO = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setInt(1, idUsuarioLogado);
             ResultSet rs = ps.executeQuery();
@@ -84,27 +85,111 @@ public class AlimentoReservadoDAO {
         return null;
     }
 
+    public boolean validaEstoque(AlimentoReservadoTO alimentoReservadoTO) {
+        try {
+            String sql = "SELECT EA.QT_ALIMENTO " +
+                    "FROM T_DEM_ESTOQUE_ALIMENTO EA " +
+                    "WHERE EA.ID_ESTOQUE = ? AND EA.ID_ALIMENTO = ? AND EA.QT_ALIMENTO >= ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, alimentoReservadoTO.getIdEstoque());
+            ps.setInt(2, alimentoReservadoTO.getIdAlimento());
+            ps.setInt(3, alimentoReservadoTO.getQuantidadeAlimentoReservado());
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()){
+                alimentoReservadoTO.setQuantidadeExistenteEstoque(resultSet.getInt("QT_ALIMENTO"));
+                return true;
+            } else return false;
 
-//    public int reservarAlimento(AlimentoReservadoTO alimentoReservadoTO, int idUsuarioLogado, int idAlimentoReservado) throws SQLException {
-//        String sql = "SELECT A.ID_ALIMENTO "ID", A.nm_alimento, EA.qt_alimento, ea.dt_alimento
-//FROM T_DEM_ALIMENTO A
-//INNER JOIN T_DEM_ESTOQUE_ALIMENTO EA
-//ON (A.ID_alimento = EA.ID_alimento)
-//INNER JOIN T_DEM_ESTOQUE E
-//ON (EA.ID_ESTOQUE = E.ID_ESTOQUE)
-//INNER JOIN T_DEM_USUARIO U
-//ON (E.ID_USUARIO = U.ID_USUARIO)
-//INNER JOIN T_DEM_USUARIO_ENDERECO END
-//ON (U.ID_USUARIO = END.ID_USUARIO)
-//WHERE END.NM_REGIAO = 'sul';";
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return false;
+    }
+
+    public void criaReservaAlimento(AlimentoReservadoTO alimentoReservadoTO, int idUsuarioLogado) {
+
+        try {
+            String sql = "INSERT INTO T_DEM_RESERVA_ALIMENTO (id_reserva, id_usuario, dt_reserva) " +
+                    "VALUES (sq_dem_reserva_alimento.nextval, ?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, idUsuarioLogado);
+            ps.setDate(2, new java.sql.Date(alimentoReservadoTO.getDataReservaAlimento().getTime()));
+            ps.executeUpdate();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void reservaAlimento(AlimentoReservadoTO alimentoReservadoTO) {
+        try {
+            String sql = " INSERT INTO T_DEM_ALIMENTO_RESERVADO (id_alimento_reservado, id_estoque_alimento, " +
+                    "id_reserva, id_alimento, qt_alimento) " +
+                    "VALUES (sq_dem_alimento_reservado.nextval, ?, sq_dem_reserva_alimento.currval, ?, ?)";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, getIdEstoqueAlimento(alimentoReservadoTO));
+            ps.setInt(2, alimentoReservadoTO.getIdAlimento());
+            ps.setInt(3, alimentoReservadoTO.getQuantidadeAlimentoReservado());
+            ps.executeUpdate();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+
+    private int getIdEstoqueAlimento(AlimentoReservadoTO alimentoReservadoTO) throws SQLException {
+
+        String sql = "SELECT ID_ESTOQUE_ALIMENTO " +
+                "FROM T_DEM_ESTOQUE_ALIMENTO " +
+                "WHERE ID_ESTOQUE = ? AND ID_ALIMENTO = ?";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, alimentoReservadoTO.getIdEstoque());
+        ps.setInt(2, alimentoReservadoTO.getIdAlimento());
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            alimentoReservadoTO.setIdEstoqueAlimento(rs.getInt("ID_ESTOQUE_ALIMENTO"));
+        }
+        return alimentoReservadoTO.getIdEstoqueAlimento();
+    }
+
+    public void subtraiQuantidadeAlimento(AlimentoReservadoTO alimentoReservadoTO) {
+        try {
+
+            String sql = "UPDATE T_DEM_ESTOQUE_ALIMENTO EA " +
+                    "SET EA.qt_alimento = ? " +
+                    "WHERE EA.ID_ALIMENTO = ? AND EA.ID_ESTOQUE = ?";
+
+            int valor = alimentoReservadoTO.getQuantidadeExistenteEstoque() - alimentoReservadoTO.getQuantidadeAlimentoReservado();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, alimentoReservadoTO.getIdEstoque());
+            ps.setInt(2, (valor));
+            ps.setInt(3, alimentoReservadoTO.getIdAlimento());
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+//    private int getQuantidadeExistente(AlimentoReservadoTO alimentoReservadoTO) throws SQLException{
+//
+//        String sql = "SELECT EA.QT_ALIMENTO " +
+//                "FROM T_DEM_ESTOQUE_ALIMENTO EA " +
+//                "WHERE EA.ID_ESTOQUE = ? AND EA.ID_ALIMENTO = ?";
 //
 //        PreparedStatement ps = con.prepareStatement(sql);
-//        ps.setLong(1, alimentoReservadoTO.getCnpjUsuario());
-//        ps.setString(2, alimentoReservadoTO.getRazaoSocial());
-//        ps.setString(3, alimentoReservadoTO.getEmailUusario());
-//        ps.setString(4, alimentoReservadoTO.getSenhaUsuario());
-//        ps.setString(5, alimentoReservadoTO.getTipoUsuario());
+//        ps.setInt(1, alimentoReservadoTO.getIdEstoque());
+//        ps.setInt(2, alimentoReservadoTO.getIdAlimento());
+//        ResultSet rs = ps.executeQuery();
 //
-//        return ps.executeUpdate();
+//        while (rs.next()) {
+//            alimentoReservadoTO.setIdEstoqueAlimento(rs.getInt("ID_ESTOQUE_ALIMENTO"));
+//        }
+//        return alimentoReservadoTO.getIdEstoqueAlimento();
 //    }
 }

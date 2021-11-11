@@ -31,6 +31,10 @@ public class EstoqueAlimentoTO {
         this.idEstoque = idEstoque;
     }
 
+    public EstoqueAlimentoTO(int quantidadeAlimento) {
+        this.quantidadeAlimento = quantidadeAlimento;
+    }
+
     public int getQuantidadeAlimento() {
         return quantidadeAlimento;
     }

@@ -6,7 +6,6 @@ import br.com.demeter.to.AlimentoReservadoTO;
 import br.com.demeter.to.EstoqueAlimentoTO;
 import br.com.demeter.to.UsuarioTO;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class AlimentoReservadoBO {
@@ -27,12 +26,13 @@ public class AlimentoReservadoBO {
         return estoqueAlimentoDAO.listarTodos(idSupermercado);
     }
 
+    public void reservarAlimento(AlimentoReservadoTO alimentoReservadoTO, int idUsuarioLogado) {
+        if (alimentoReservadoDAO.validaEstoque(alimentoReservadoTO)){
+            alimentoReservadoDAO.criaReservaAlimento(alimentoReservadoTO, idUsuarioLogado);
+            alimentoReservadoDAO.reservaAlimento(alimentoReservadoTO);
+            alimentoReservadoDAO.subtraiQuantidadeAlimento(alimentoReservadoTO);
+        }
 
-//    public void reservarAlimento(AlimentoReservadoTO alimentoReservadoTO, int idUsuarioLogado, int idAlimentoReservado) {
-//        try {
-//            alimentoReservadoDAO.reservarAlimento(alimentoReservadoTO, idUsuarioLogado, idAlimentoReservado);
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-//    }
+    }
+
 }

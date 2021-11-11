@@ -13,7 +13,7 @@ public class EstoqueAlimentoDAO {
     public List<EstoqueAlimentoTO> listarTodos(int idUsuario) {
         try {
 
-            String sql = "SELECT A.ID_ALIMENTO, A.nm_alimento, EA.qt_alimento, ea.dt_alimento " +
+            String sql = "SELECT A.ID_ALIMENTO, A.nm_alimento, EA.qt_alimento, ea.dt_alimento, ea.id_estoque " +
                     "FROM T_DEM_ALIMENTO A " +
                     "INNER JOIN T_DEM_ESTOQUE_ALIMENTO EA " +
                     "ON (A.ID_alimento = EA.ID_alimento) " +
@@ -27,7 +27,8 @@ public class EstoqueAlimentoDAO {
             List<EstoqueAlimentoTO> listaEstoqueAlimento = new ArrayList<>();
             while (rs.next()) {
                 EstoqueAlimentoTO estoqueAlimentoTO = new EstoqueAlimentoTO(rs.getInt("qt_alimento"),
-                        rs.getInt("ID_ALIMENTO"), rs.getString("nm_alimento"), rs.getDate("dt_alimento"));
+                        rs.getInt("ID_ALIMENTO"), rs.getString("nm_alimento"),
+                        rs.getDate("dt_alimento"), rs.getInt("id_estoque"));
                 listaEstoqueAlimento.add(estoqueAlimentoTO);
             }
             ps.close();
