@@ -164,11 +164,12 @@ public class AlimentoReservadoDAO {
                     "SET EA.qt_alimento = ? " +
                     "WHERE EA.ID_ALIMENTO = ? AND EA.ID_ESTOQUE = ?";
 
+
             int valor = alimentoReservadoTO.getQuantidadeExistenteEstoque() - alimentoReservadoTO.getQuantidadeAlimentoReservado();
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, alimentoReservadoTO.getIdEstoque());
-            ps.setInt(2, (valor));
-            ps.setInt(3, alimentoReservadoTO.getIdAlimento());
+            ps.setInt(1, valor);
+            ps.setInt(2, alimentoReservadoTO.getIdAlimento());
+            ps.setInt(3, alimentoReservadoTO.getIdEstoque());
             ps.executeUpdate();
             ps.close();
         } catch (SQLException e) {
