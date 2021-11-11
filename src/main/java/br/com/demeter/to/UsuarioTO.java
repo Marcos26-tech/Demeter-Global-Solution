@@ -25,6 +25,15 @@ public class UsuarioTO {
 		this.tipoUsuario = tipoUsuario;
 	}
 
+	public UsuarioTO(String regiaoUsuario) {
+		this.regiaoUsuario = regiaoUsuario;
+	}
+
+	public UsuarioTO(int idUsuario, String razaoSocial) {
+		this.idUsuario = idUsuario;
+		this.razaoSocial = razaoSocial;
+	}
+
 	public int getIdUsuario() {
 		return idUsuario;
 	}

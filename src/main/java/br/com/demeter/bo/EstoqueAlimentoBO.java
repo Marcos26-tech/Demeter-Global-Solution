@@ -45,7 +45,9 @@ public class EstoqueAlimentoBO {
             if(!estoqueAlimentoDAO.isAlimentoEstoque(estoqueAlimentoTO, idUsuarioLogado)) {
                 estoqueAlimentoDAO.inserirAlimentoEstoque(estoqueAlimentoTO, idUsuarioLogado);
             }
-            editar(estoqueAlimentoTO, idUsuarioLogado);
+            if ((estoqueAlimentoDAO.isAlimentoCadastrado(estoqueAlimentoTO)) && (estoqueAlimentoDAO.isAlimentoEstoque(estoqueAlimentoTO, idUsuarioLogado))){
+                editar(estoqueAlimentoTO, idUsuarioLogado);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
