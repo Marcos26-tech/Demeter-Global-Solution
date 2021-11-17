@@ -26,13 +26,13 @@ public class AlimentoReservadoBO {
         return estoqueAlimentoDAO.listarTodos(idSupermercado);
     }
 
-    public void reservarAlimento(AlimentoReservadoTO alimentoReservadoTO, int idUsuarioLogado) {
+    public boolean reservarAlimento(AlimentoReservadoTO alimentoReservadoTO, int idUsuarioLogado) {
         if (alimentoReservadoDAO.validaEstoque(alimentoReservadoTO)){
             alimentoReservadoDAO.criaReservaAlimento(alimentoReservadoTO, idUsuarioLogado);
             alimentoReservadoDAO.reservaAlimento(alimentoReservadoTO);
             alimentoReservadoDAO.subtraiQuantidadeAlimento(alimentoReservadoTO);
-        }
-
+            return true;
+        }else return false;
     }
 
 }

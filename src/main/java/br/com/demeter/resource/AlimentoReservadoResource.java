@@ -38,12 +38,8 @@ public class AlimentoReservadoResource {
     @POST
     @Path("/reservar/{idUsuarioLogado}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response reservarAlimento(AlimentoReservadoTO alimentoReservadoTO, @PathParam("idUsuarioLogado") int idUsuarioLogado,
-                                     @Context UriInfo uriInfo) {
-        alimentoReservadoBO.reservarAlimento(alimentoReservadoTO, idUsuarioLogado);
-        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-        builder.path(Integer.toString(alimentoReservadoTO.getQuantidadeAlimentoReservado()));
-        return Response.created(builder.build()).build();
+    public boolean reservarAlimento(AlimentoReservadoTO alimentoReservadoTO, @PathParam("idUsuarioLogado") int idUsuarioLogado) {
+        return alimentoReservadoBO.reservarAlimento(alimentoReservadoTO, idUsuarioLogado);
     }
 
 }
