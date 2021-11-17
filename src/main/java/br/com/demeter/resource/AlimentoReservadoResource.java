@@ -39,7 +39,7 @@ public class AlimentoReservadoResource {
     @Path("/reservar/{idUsuarioLogado}")
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean reservarAlimento(AlimentoReservadoTO alimentoReservadoTO, @PathParam("idUsuarioLogado") int idUsuarioLogado) {
-        return alimentoReservadoBO.reservarAlimento(alimentoReservadoTO, idUsuarioLogado);
+       return alimentoReservadoBO.reservarAlimento(alimentoReservadoTO, idUsuarioLogado);
     }
 
 }
