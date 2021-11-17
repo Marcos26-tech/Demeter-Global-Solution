@@ -119,7 +119,6 @@ public class EstoqueAlimentoDAO {
             ps.setDate(4, new java.sql.Date(estoqueAlimentoTO.getDataValidadeAlimento().getTime()));
 
             ps.executeUpdate();
-//            con.close();
     }
 
     private int getIdEstoque(EstoqueAlimentoTO estoqueAlimentoTO, int idUsuarioLogado) throws SQLException{
