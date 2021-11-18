@@ -1,6 +1,5 @@
 package br.com.demeter.dao;
 
-
 import br.com.demeter.to.AlimentoReservadoTO;
 import br.com.demeter.to.EstoqueAlimentoTO;
 import br.com.demeter.to.UsuarioTO;
@@ -14,168 +13,201 @@ import java.util.List;
 
 public class AlimentoReservadoDAO {
 
-    Connection con = ConnectionFactory.getConnection();
+	Connection con = ConnectionFactory.getConnection();
 
-    public List<EstoqueAlimentoTO> listarTodos(){
-        try {
-        String sql = "SELECT A.ID_ALIMENTO, A.nm_alimento, EA.qt_alimento, ea.dt_alimento " +
-                "FROM T_DEM_ALIMENTO A " +
-                "INNER JOIN T_DEM_ESTOQUE_ALIMENTO EA " +
-                "ON (A.ID_alimento = EA.ID_alimento) " +
-                "INNER JOIN T_DEM_ESTOQUE E " +
-                "ON (EA.ID_ESTOQUE = E.ID_ESTOQUE) ";
-        PreparedStatement ps = con.prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
-        List<EstoqueAlimentoTO> listaEstoqueAlimento = new ArrayList<>();
-            while (rs.next()) {
-                EstoqueAlimentoTO estoqueAlimentoTO = new EstoqueAlimentoTO(rs.getInt("qt_alimento"),
-                        rs.getInt("ID_ALIMENTO"), rs.getString("nm_alimento"), rs.getDate("dt_alimento"));
-                listaEstoqueAlimento.add(estoqueAlimentoTO);
-            }
-            ps.close();
-            return listaEstoqueAlimento;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return null;
-    }
+	/**
+	 * Método que busca todos os estoques de alimentos.
+	 * 
+	 * @return Um array do tipo EstoqueAlimentoTO.
+	 */
+	public List<EstoqueAlimentoTO> listarTodos() {
+		try {
+			String sql = "SELECT A.ID_ALIMENTO, A.nm_alimento, EA.qt_alimento, ea.dt_alimento "
+					+ "FROM T_DEM_ALIMENTO A " + "INNER JOIN T_DEM_ESTOQUE_ALIMENTO EA "
+					+ "ON (A.ID_alimento = EA.ID_alimento) " + "INNER JOIN T_DEM_ESTOQUE E "
+					+ "ON (EA.ID_ESTOQUE = E.ID_ESTOQUE) ";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			List<EstoqueAlimentoTO> listaEstoqueAlimento = new ArrayList<>();
+			while (rs.next()) {
+				EstoqueAlimentoTO estoqueAlimentoTO = new EstoqueAlimentoTO(rs.getInt("qt_alimento"),
+						rs.getInt("ID_ALIMENTO"), rs.getString("nm_alimento"), rs.getDate("dt_alimento"));
+				listaEstoqueAlimento.add(estoqueAlimentoTO);
+			}
+			ps.close();
+			return listaEstoqueAlimento;
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+		return null;
+	}
 
-    public List<UsuarioTO> mostrarSupermercados(String regiao) {
-        try {
-            String sql = "SELECT U.NM_RAZAO_SOCIAL, U.ID_USUARIO " +
-                    "FROM T_DEM_USUARIO U " +
-                    "INNER JOIN T_DEM_USUARIO_ENDERECO E " +
-                    "ON (U.ID_USUARIO = E.ID_USUARIO) " +
-                    "WHERE U.TP_USUARIO = 'supermercado' AND E.NM_REGIAO = ? ";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, regiao);
-            ResultSet rs = ps.executeQuery();
-            List<UsuarioTO> listaSupermercados = new ArrayList<>();
-            while (rs.next()) {
-                UsuarioTO usuario = new UsuarioTO(rs.getInt("ID_USUARIO"),
-                        rs.getString("NM_RAZAO_SOCIAL"));
-                listaSupermercados.add(usuario);
-            }
-            ps.close();
-            return listaSupermercados;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return null;
-    }
+	/**
+	 * Método que busca todos os usuarios, por região, do tipo supermercado.
+	 * 
+	 * @param regiao
+	 * @return Um Array do tipo UsuarioTO.
+	 */
+	public List<UsuarioTO> mostrarSupermercados(String regiao) {
+		try {
+			String sql = "SELECT U.NM_RAZAO_SOCIAL, U.ID_USUARIO " + "FROM T_DEM_USUARIO U "
+					+ "INNER JOIN T_DEM_USUARIO_ENDERECO E " + "ON (U.ID_USUARIO = E.ID_USUARIO) "
+					+ "WHERE U.TP_USUARIO = 'supermercado' AND E.NM_REGIAO = ? ";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, regiao);
+			ResultSet rs = ps.executeQuery();
+			List<UsuarioTO> listaSupermercados = new ArrayList<>();
+			while (rs.next()) {
+				UsuarioTO usuario = new UsuarioTO(rs.getInt("ID_USUARIO"), rs.getString("NM_RAZAO_SOCIAL"));
+				listaSupermercados.add(usuario);
+			}
+			ps.close();
+			return listaSupermercados;
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+		return null;
+	}
 
-    public UsuarioTO mostrarRegioaoUsuarioLogado(int idUsuarioLogado){
-        try {
-            String sql = " SELECT E.NM_REGIAO " +
-                    "FROM T_DEM_USUARIO_ENDERECO E " +
-                    "INNER JOIN T_DEM_USUARIO U " +
-                    "ON (U.ID_USUARIO = E.ID_USUARIO) " +
-                    "WHERE U.ID_USUARIO = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, idUsuarioLogado);
-            ResultSet rs = ps.executeQuery();
-            rs.next();
-            UsuarioTO usuarioTO = new UsuarioTO(rs.getString("NM_REGIAO"));
+	/**
+	 * Método que mostra qual a região do supermercado que está logado na plataforma web
+	 * 
+	 * 
+	 * @param idUsuarioLogado
+	 * @return UsuarioTO.getRegiao
+	 */
+	public UsuarioTO mostrarRegioaoUsuarioLogado(int idUsuarioLogado) {
+		try {
+			String sql = " SELECT E.NM_REGIAO " + "FROM T_DEM_USUARIO_ENDERECO E " + "INNER JOIN T_DEM_USUARIO U "
+					+ "ON (U.ID_USUARIO = E.ID_USUARIO) " + "WHERE U.ID_USUARIO = ?";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1, idUsuarioLogado);
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			UsuarioTO usuarioTO = new UsuarioTO(rs.getString("NM_REGIAO"));
 
-            ps.close();
-            return usuarioTO;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return null;
-    }
+			ps.close();
+			return usuarioTO;
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+		return null;
+	}
 
-    public boolean validaEstoque(AlimentoReservadoTO alimentoReservadoTO) {
-        try {
-            String sql = "SELECT EA.QT_ALIMENTO " +
-                    "FROM T_DEM_ESTOQUE_ALIMENTO EA " +
-                    "WHERE EA.ID_ESTOQUE = ? AND EA.ID_ALIMENTO = ? AND EA.QT_ALIMENTO >= ?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, alimentoReservadoTO.getIdEstoque());
-            ps.setInt(2, alimentoReservadoTO.getIdAlimento());
-            ps.setInt(3, alimentoReservadoTO.getQuantidadeAlimentoReservado());
-            ResultSet resultSet = ps.executeQuery();
-            if (resultSet.next()){
-                alimentoReservadoTO.setQuantidadeExistenteEstoque(resultSet.getInt("QT_ALIMENTO"));
-                return true;
-            } else return false;
+	/**
+	 * Método que valida se um estoque possue quantidade suficiente de alimento.
+	 * 
+	 * @param alimentoReservadoTO
+	 * @return True caso sim, False caso não.
+	 */
+	public boolean validaEstoque(AlimentoReservadoTO alimentoReservadoTO) {
+		try {
+			String sql = "SELECT EA.QT_ALIMENTO " + "FROM T_DEM_ESTOQUE_ALIMENTO EA "
+					+ "WHERE EA.ID_ESTOQUE = ? AND EA.ID_ALIMENTO = ? AND EA.QT_ALIMENTO >= ?";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1, alimentoReservadoTO.getIdEstoque());
+			ps.setInt(2, alimentoReservadoTO.getIdAlimento());
+			ps.setInt(3, alimentoReservadoTO.getQuantidadeAlimentoReservado());
+			ResultSet resultSet = ps.executeQuery();
+			if (resultSet.next()) {
+				alimentoReservadoTO.setQuantidadeExistenteEstoque(resultSet.getInt("QT_ALIMENTO"));
+				return true;
+			} else
+				return false;
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+		return false;
+	}
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return false;
-    }
+	/**
+	 * CREATE, realizando a criação de uma reserva de um alimento.
+	 * 
+	 * @param alimentoReservadoTO
+	 * @param idUsuarioLogado
+	 */
+	public void criaReservaAlimento(AlimentoReservadoTO alimentoReservadoTO, int idUsuarioLogado) {
+		try {
+			String sql = "INSERT INTO T_DEM_RESERVA_ALIMENTO (id_reserva, id_usuario, dt_reserva) "
+					+ "VALUES (sq_dem_reserva_alimento.nextval, ?, ?)";
 
-    public void criaReservaAlimento(AlimentoReservadoTO alimentoReservadoTO, int idUsuarioLogado) {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1, idUsuarioLogado);
+			ps.setDate(2, new java.sql.Date(alimentoReservadoTO.getDataReservaAlimento().getTime()));
+			ps.executeUpdate();
 
-        try {
-            String sql = "INSERT INTO T_DEM_RESERVA_ALIMENTO (id_reserva, id_usuario, dt_reserva) " +
-                    "VALUES (sq_dem_reserva_alimento.nextval, ?, ?)";
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+	}
 
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, idUsuarioLogado);
-            ps.setDate(2, new java.sql.Date(alimentoReservadoTO.getDataReservaAlimento().getTime()));
-            ps.executeUpdate();
+	/**
+	 * Método para reservar um alimento.
+	 * 
+	 * @param alimentoReservadoTO
+	 */
+	public void reservaAlimento(AlimentoReservadoTO alimentoReservadoTO) {
+		try {
+			String sql = " INSERT INTO T_DEM_ALIMENTO_RESERVADO (id_alimento_reservado, id_estoque_alimento, "
+					+ "id_reserva, id_alimento, qt_alimento) "
+					+ "VALUES (sq_dem_alimento_reservado.nextval, ?, sq_dem_reserva_alimento.currval, ?, ?)";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1, getIdEstoqueAlimento(alimentoReservadoTO));
+			ps.setInt(2, alimentoReservadoTO.getIdAlimento());
+			ps.setInt(3, alimentoReservadoTO.getQuantidadeAlimentoReservado());
+			ps.executeUpdate();
+		} catch (SQLException throwables) {
+			throwables.printStackTrace();
+		}
+	}
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-    }
+	/**
+	 * Método para buscar o ID do Estoque de alimento.
+	 * 
+	 * @param alimentoReservadoTO
+	 * @return o ID do estoque.
+	 * @throws SQLException
+	 */
+	private int getIdEstoqueAlimento(AlimentoReservadoTO alimentoReservadoTO) throws SQLException {
 
-    public void reservaAlimento(AlimentoReservadoTO alimentoReservadoTO) {
-        try {
-            String sql = " INSERT INTO T_DEM_ALIMENTO_RESERVADO (id_alimento_reservado, id_estoque_alimento, " +
-                    "id_reserva, id_alimento, qt_alimento) " +
-                    "VALUES (sq_dem_alimento_reservado.nextval, ?, sq_dem_reserva_alimento.currval, ?, ?)";
+		String sql = "SELECT ID_ESTOQUE_ALIMENTO " + "FROM T_DEM_ESTOQUE_ALIMENTO "
+				+ "WHERE ID_ESTOQUE = ? AND ID_ALIMENTO = ?";
 
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, getIdEstoqueAlimento(alimentoReservadoTO));
-            ps.setInt(2, alimentoReservadoTO.getIdAlimento());
-            ps.setInt(3, alimentoReservadoTO.getQuantidadeAlimentoReservado());
-            ps.executeUpdate();
+		PreparedStatement ps = con.prepareStatement(sql);
+		ps.setInt(1, alimentoReservadoTO.getIdEstoque());
+		ps.setInt(2, alimentoReservadoTO.getIdAlimento());
+		ResultSet rs = ps.executeQuery();
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+		while (rs.next()) {
+			alimentoReservadoTO.setIdEstoqueAlimento(rs.getInt("ID_ESTOQUE_ALIMENTO"));
+		}
+		return alimentoReservadoTO.getIdEstoqueAlimento();
+	}
 
-    }
+	/**
+	 * Método para subtrair a quantidade de alimento quando o mesmo for reservado
+	 * Por um usuário.
+	 * 
+	 * @param alimentoReservadoTO
+	 */
+	public void subtraiQuantidadeAlimento(AlimentoReservadoTO alimentoReservadoTO) {
+		try {
 
-    private int getIdEstoqueAlimento(AlimentoReservadoTO alimentoReservadoTO) throws SQLException {
+			String sql = "UPDATE T_DEM_ESTOQUE_ALIMENTO EA " + "SET EA.qt_alimento = ? "
+					+ "WHERE EA.ID_ALIMENTO = ? AND EA.ID_ESTOQUE = ?";
 
-        String sql = "SELECT ID_ESTOQUE_ALIMENTO " +
-                "FROM T_DEM_ESTOQUE_ALIMENTO " +
-                "WHERE ID_ESTOQUE = ? AND ID_ALIMENTO = ?";
-
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setInt(1, alimentoReservadoTO.getIdEstoque());
-        ps.setInt(2, alimentoReservadoTO.getIdAlimento());
-        ResultSet rs = ps.executeQuery();
-
-        while (rs.next()) {
-            alimentoReservadoTO.setIdEstoqueAlimento(rs.getInt("ID_ESTOQUE_ALIMENTO"));
-        }
-        return alimentoReservadoTO.getIdEstoqueAlimento();
-    }
-
-    public void subtraiQuantidadeAlimento(AlimentoReservadoTO alimentoReservadoTO) {
-        try {
-
-            String sql = "UPDATE T_DEM_ESTOQUE_ALIMENTO EA " +
-                    "SET EA.qt_alimento = ? " +
-                    "WHERE EA.ID_ALIMENTO = ? AND EA.ID_ESTOQUE = ?";
-
-
-            int valor = alimentoReservadoTO.getQuantidadeExistenteEstoque() - alimentoReservadoTO.getQuantidadeAlimentoReservado();
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, valor);
-            ps.setInt(2, alimentoReservadoTO.getIdAlimento());
-            ps.setInt(3, alimentoReservadoTO.getIdEstoque());
-            ps.executeUpdate();
-            ps.close();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
+			int valor = alimentoReservadoTO.getQuantidadeExistenteEstoque()
+					- alimentoReservadoTO.getQuantidadeAlimentoReservado();
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1, valor);
+			ps.setInt(2, alimentoReservadoTO.getIdAlimento());
+			ps.setInt(3, alimentoReservadoTO.getIdEstoque());
+			ps.executeUpdate();
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 
 //    private int getQuantidadeExistente(AlimentoReservadoTO alimentoReservadoTO) throws SQLException{
 //
