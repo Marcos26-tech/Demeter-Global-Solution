@@ -4,6 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Classe responsável por fazer a conexão com o banco de dados oracle.
+ * 
+ * @author Cristine Ramiro d`Arc Acocella Piccolotto Vasconcellos
+ *
+ */
 public class ConnectionFactory {
 
 	public static Connection getConnection() {
