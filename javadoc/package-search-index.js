@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"br.com.demeter.bo"},{"l":"br.com.demeter.dao"},{"l":"br.com.demeter.resource"},{"l":"br.com.demeter.to"}]
